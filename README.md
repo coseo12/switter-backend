@@ -6,7 +6,7 @@ API Spec - Switter
 
 ### Tweet `Schema`
 
-```json
+```js
 {
     id: string, // 트윗 아이디
     text: string, // 트윗 텍스트
@@ -23,7 +23,7 @@ API Spec - Switter
 
 📬 Response `200`
 
-```json
+```js
 {
   [tweet, tweet, ...n],
 }
@@ -35,7 +35,7 @@ API Spec - Switter
 
 📬 Response `200`
 
-```json
+```js
 {
   [tweet, tweet, ...n],
 }
@@ -47,7 +47,7 @@ API Spec - Switter
 
 📬 Response `200`
 
-```json
+```js
 {
   tweet,
 }
@@ -59,20 +59,17 @@ API Spec - Switter
 
 📮 Request
 
-```json
+```js
 {
-  text,
-  name,
-  username,
-  url, (optional)
+  text, name, username, url, optional;
 }
 ```
 
 📬 Response `201`
 
-```json
+```js
 {
-    tweet
+  tweet,
 }
 ```
 
@@ -82,17 +79,17 @@ API Spec - Switter
 
 📮 Request
 
-```json
+```js
 {
-  text
+  text,
 }
 ```
 
 📬 Response `200`
 
-```json
+```js
 {
-    tweet
+  tweet,
 }
 ```
 
