@@ -4,7 +4,7 @@ API Spec - Switter
 
 ## Switter
 
-### Tweet `Schema`
+### `Tweet` Schema
 
 ```js
 {
@@ -13,7 +13,7 @@ API Spec - Switter
     createdAt: Date, // 트윗 생성 날짜
     name: string, // 사용자 이름
     username: string, // 사용자 닉네임 (아이디)
-    url: string (optional), // 사용자 프로파일 사진 URL
+    url?: string, // 사용자 프로파일 사진 URL (optional)
 }
 ```
 
@@ -61,7 +61,10 @@ API Spec - Switter
 
 ```js
 {
-  text, name, username, url, optional;
+  text,
+  name,
+  username,
+  url?,
 }
 ```
 
