@@ -98,6 +98,6 @@ API Spec - Switter
 
 ### `DELETE` /tweets/:id
 
-💡 Updating tweet
+💡 Delete tweet
 
 📬 Response `204`
