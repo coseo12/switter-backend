@@ -9,10 +9,10 @@ const PORT = 4000;
 
 const app = express();
 
+app.use(express.json());
 app.use(helmet());
 app.use(cors());
 app.use(morgan('tiny'));
-app.use(express.json());
 
 app.use('/tweets', tweetRoute);
 
