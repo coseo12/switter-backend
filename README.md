@@ -2,7 +2,7 @@
 
 API Spec - Switter
 
-## Switter
+## Tweets
 
 ### `Tweet` Schema
 
@@ -101,3 +101,80 @@ API Spec - Switter
 💡 Delete tweet
 
 📬 Response `204`
+
+## Auth
+
+User's profile photos
+
+- https://cdn.expcloud.co/life/uploads/2020/04/27135731/Fee-gentry-hed-shot-1.jpg
+
+- https://widgetwhats.com/app/uploads/2019/11/free-profile-photo-whatsapp-1.png
+
+- https://widgetwhats.com/app/uploads/2019/11/free-profile-photo-whatsapp-4-300x300.png
+
+### `Auth` Schema
+
+```js
+{
+  id: string, // 사용자의 고유한 아이디
+  username: string,  // 사용자 닉네임 (아이디)
+  password: string,  // 사용자 비밀번호
+  name: string,  // 사용자 이름
+  email: string,  // 사용자 이메일
+  url?: string,  // 사용자 프로파일 사진 URL (optional)
+}
+```
+
+### `POST` /auth/signup
+
+📮 Request
+
+```js
+{
+  username,
+	password,
+  name,
+  email,
+  url,
+}
+```
+
+📬 Response `200`
+
+```js
+{
+  token,
+	username,
+}
+```
+
+### `POST` /auth/login
+
+📮 Request
+
+```js
+{
+  username,
+	password,
+}
+```
+
+📬 Response `200`
+
+```js
+{
+  token,
+	username,
+}
+```
+
+### `GET` /auth/me
+
+📬 Response `200`
+
+```js
+{
+  token,
+	username,
+}
+```
