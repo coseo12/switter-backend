@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import * as authRepository from '../data/auth.js';
 
 // Make it secure
-const jwtSecretKey = `i461Hz960oWYy1HwdvxIhlSa!Qz%smwz`;
+export const jwtSecretKey = `i461Hz960oWYy1HwdvxIhlSa!Qz%smwz`;
 const jwtExpiresInDays = '2d';
 const bcryptSaltRounds = 12;
 
@@ -41,4 +41,12 @@ export async function login(req, res, next) {
   }
   const token = createJwtToken(user.id);
   res.status(200).json({ token, username });
+}
+
+export async function me(req, res, next) {
+  const user = await authRepository.findById(req.userId);
+  if (!user) {
+    return res.status(404).json({ message: `User not found` });
+  }
+  res.status(200).json({ token: req.token, username: user.name });
 }

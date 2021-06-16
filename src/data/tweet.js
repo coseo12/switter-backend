@@ -1,42 +1,50 @@
+import * as authRepository from './auth.js';
+
 let tweets = [
   {
     id: '1',
     text: 'test data1',
-    createdAt: Date.now().toString(),
-    name: 'Bob',
-    username: 'bob',
-    url: 'https://widgetwhats.com/app/uploads/2019/11/free-profile-photo-whatsapp-1.png',
+    createdAt: new Date(),
+    userId: '1',
   },
   {
     id: '2',
     text: 'test data2',
-    createdAt: Date.now().toString(),
-    name: 'Seo',
-    username: 'Seo',
-    url: 'https://widgetwhats.com/app/uploads/2019/11/free-profile-photo-whatsapp-1.png',
+    createdAt: new Date(),
+    userId: '1',
   },
 ];
 
 export async function getAll() {
-  return tweets;
+  return Promise.all(
+    tweets.map(async tweet => {
+      const { username, name, url } = await authRepository.findById(
+        tweet.userId
+      );
+      return { ...tweet, username, name, url };
+    })
+  );
 }
 
 export async function getByUsername(username) {
-  return tweets.filter(tweet => tweet.username === username);
+  return getAll().then(res => res.filter(tweet => tweet.username === username));
 }
 
 export async function getById(id) {
-  return tweets.find(tweet => tweet.id === id);
+  const found = tweets.find(tweet => tweet.id === id);
+  if (!found) {
+    return null;
+  }
+  const { username, name, url } = await authRepository.findById(found.userId);
+  return { ...found, username, name, url };
 }
 
-export async function created({ text, name, username, url }) {
+export async function created(text, userId) {
   const tweet = {
     id: Date.now().toString(),
     text,
-    name,
-    username,
-    url: url ? url : '',
-    createdAt: Date.now().toString(),
+    userId,
+    createdAt: new Date(),
   };
   tweets = [tweet, ...tweets];
   return tweet;
