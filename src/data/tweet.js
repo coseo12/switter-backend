@@ -40,6 +40,7 @@ export async function getById(id) {
 }
 
 export async function created(text, userId) {
+  const { username, name, url } = await authRepository.findById(userId);
   const tweet = {
     id: Date.now().toString(),
     text,
@@ -47,15 +48,16 @@ export async function created(text, userId) {
     createdAt: new Date(),
   };
   tweets = [tweet, ...tweets];
-  return tweet;
+  return { ...tweet, username, name, url };
 }
 
-export async function updated(id, text) {
+export async function updated(id, text, userId) {
+  const { username, name, url } = await authRepository.findById(userId);
   const tweet = await getById(id);
   if (tweet) {
     tweet.text = text;
   }
-  return tweet;
+  return { ...tweet, username, name, url };
 }
 
 export async function remove(id) {

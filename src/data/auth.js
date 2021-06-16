@@ -3,9 +3,9 @@ let users = [
     id: '1',
     username: 'seo',
     password: `$2b$12$LPVQxDVfRJ8mlzZBz17z9uHWgQUMIQhlWUMRSTuE6wQ7y9ysL4l7q`,
-    name: 'Seo',
+    name: 'seo',
     email: 'seo@email.com',
-    url: 'https://cdn.expcloud.co/life/uploads/2020/04/27135731/Fee-gentry-hed-shot-1.jpg',
+    url: 'https://widgetwhats.com/app/uploads/2019/11/free-profile-photo-whatsapp-1.png',
   },
 ];
 
@@ -22,7 +22,6 @@ export async function createUser(user) {
     id: Date.now().toString(),
     ...user,
   };
-  console.log(user.password);
   users.push(cerated);
   return cerated.id;
 }
