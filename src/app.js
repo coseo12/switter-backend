@@ -6,6 +6,7 @@ import 'express-async-error';
 import tweetRoute from './router/tweets.js';
 import authRoute from './router/auth.js';
 import { config } from './config.js';
+import { initSocket } from './connection/socket.js';
 
 const app = express();
 
@@ -26,6 +27,8 @@ app.use((error, req, res, next) => {
   res.sendStatus(500);
 });
 
-app.listen(config.host.PORT, () => {
+const server = app.listen(config.host.PORT, () => {
   console.log(`Server started to http://localhost:${config.host.PORT}`);
 });
+
+initSocket(server);
