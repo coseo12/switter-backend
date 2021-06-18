@@ -2,6 +2,8 @@
 
 API Spec - Switter
 
+- [https://switter-ac.herokuapp.com/](https://switter-ac.herokuapp.com/)
+
 ## Tweets
 
 ### `Tweet` Schema
