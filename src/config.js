@@ -21,10 +21,10 @@ export const config = {
     saltRounds: Number(required('BCRYPT_SALT_ROUNDS', 12)),
   },
   db: {
-    host: required('DB_HOST'),
-    user: required('DB_USER'),
-    database: required('DB_DATABASE'),
-    password: required('DB_PASSWORD'),
+    host: required('DB_HOST', 'a'),
+    user: required('DB_USER', 'b'),
+    database: required('DB_DATABASE', 'c'),
+    password: required('DB_PASSWORD', 'd'),
     uri: process.env['DATABASE_URL'] || '',
   },
   cors: {
