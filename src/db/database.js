@@ -6,4 +6,11 @@ const connect = uri ? [uri] : [database, user, password];
 export const sequelize = new SQ.Sequelize(...connect, {
   host,
   dialect: 'postgres',
+  logging: false,
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
+    },
+  },
 });
