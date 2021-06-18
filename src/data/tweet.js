@@ -1,85 +1,51 @@
-import { User } from './auth.js';
-import SQ from 'sequelize';
-import { sequelize } from '../db/database.js';
+import Mongoose from 'mongoose';
+import { useVirtualId } from '../db/database.js';
+import * as authRepository from './auth.js';
 
-const DataTypes = SQ.DataTypes;
-const Sequelize = SQ.Sequelize;
-
-const INCLUDE_USER = {
-  attributes: [
-    'id',
-    'text',
-    'createdAt',
-    'userId',
-    [Sequelize.col('user.name'), 'name'],
-    [Sequelize.col('user.username'), 'username'],
-    [Sequelize.col('user.url'), 'url'],
-  ],
-  include: {
-    model: User,
-    attributes: [],
+const tweetSchema = new Mongoose.Schema(
+  {
+    text: { type: String, required: true },
+    userId: { type: String, required: true },
+    username: { type: String, required: true },
+    name: { type: String, required: true },
+    url: String,
   },
-};
+  {
+    timestamps: true,
+  }
+);
 
-export const Tweet = sequelize.define('tweet', {
-  id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    allowNull: false,
-    primaryKey: true,
-    unique: true,
-  },
-  text: {
-    type: DataTypes.TEXT,
-    allowNull: false,
-  },
-});
+useVirtualId(tweetSchema);
 
-Tweet.belongsTo(User);
+const Tweet = Mongoose.model('Tweet', tweetSchema);
 
 export async function getAll() {
-  return Tweet.findAll({
-    ...INCLUDE_USER,
-    order: [['createdAt', 'DESC']],
-  });
+  return Tweet.find().sort({ createdAt: -1 });
 }
 
 export async function getByUsername(username) {
-  return Tweet.findAll({
-    attributes: [...INCLUDE_USER.attributes],
-    include: {
-      ...INCLUDE_USER.include,
-      where: { username },
-    },
-    order: [['createdAt', 'DESC']],
-  });
+  return Tweet.find({ username }).sort({ createdAt: -1 });
 }
 
 export async function getById(id) {
-  const found = await Tweet.findOne({
-    where: { id },
-    ...INCLUDE_USER,
-  });
-  if (!found) {
-    return null;
-  }
-  return found;
+  return Tweet.findById(id);
 }
 
 export async function created(text, userId) {
-  const created = await Tweet.create({ text, userId });
-  const found = await getById(created.dataValues.id);
-  return found;
+  const user = await authRepository.findById(userId);
+  return new Tweet({
+    text,
+    userId,
+    username: user.username,
+    name: user.name,
+    url: user.url,
+  }).save();
 }
 
 export async function updated(id, text) {
-  const tweet = await getById(id);
-  if (tweet) {
-    await tweet.update({ text });
-  }
-  return tweet;
+  return Tweet.findByIdAndUpdate(id, { text }, { returnOriginal: false });
 }
 
 export async function remove(id) {
-  Tweet.destroy({ where: { id } });
+  return Tweet.findByIdAndRemove(id);
 }

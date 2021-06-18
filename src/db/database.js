@@ -1,8 +1,19 @@
-import SQ from 'sequelize';
+import Mongoose from 'mongoose';
 import { config } from '../config.js';
 
-const { host, user, database, password } = config.db;
-export const sequelize = new SQ.Sequelize(database, user, password, {
-  host,
-  dialect: 'postgres',
-});
+export async function connectDB() {
+  return Mongoose.connect(config.db.host, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+  });
+}
+
+export function useVirtualId(schema) {
+  schema.virtual('id').get(function () {
+    return this._id.toString();
+  });
+
+  schema.set('toJSON', { virtual: true });
+  schema.set('toObject', { virtual: true });
+}
