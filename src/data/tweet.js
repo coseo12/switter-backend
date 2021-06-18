@@ -1,65 +1,85 @@
-import * as authRepository from './auth.js';
+import { User } from './auth.js';
+import SQ from 'sequelize';
+import { sequelize } from '../db/database.js';
 
-let tweets = [
-  {
-    id: '1',
-    text: 'test data1',
-    createdAt: new Date(),
-    userId: '1',
+const DataTypes = SQ.DataTypes;
+const Sequelize = SQ.Sequelize;
+
+const INCLUDE_USER = {
+  attributes: [
+    'id',
+    'text',
+    'createdAt',
+    'userId',
+    [Sequelize.col('user.name'), 'name'],
+    [Sequelize.col('user.username'), 'username'],
+    [Sequelize.col('user.url'), 'url'],
+  ],
+  include: {
+    model: User,
+    attributes: [],
   },
-  {
-    id: '2',
-    text: 'test data2',
-    createdAt: new Date(),
-    userId: '1',
+};
+
+export const Tweet = sequelize.define('tweet', {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    allowNull: false,
+    primaryKey: true,
+    unique: true,
   },
-];
+  text: {
+    type: DataTypes.TEXT,
+    allowNull: false,
+  },
+});
+
+Tweet.belongsTo(User);
 
 export async function getAll() {
-  return Promise.all(
-    tweets.map(async tweet => {
-      const { username, name, url } = await authRepository.findById(
-        tweet.userId
-      );
-      return { ...tweet, username, name, url };
-    })
-  );
+  return Tweet.findAll({
+    ...INCLUDE_USER,
+    order: [['createdAt', 'DESC']],
+  });
 }
 
 export async function getByUsername(username) {
-  return getAll().then(res => res.filter(tweet => tweet.username === username));
+  return Tweet.findAll({
+    attributes: [...INCLUDE_USER.attributes],
+    include: {
+      ...INCLUDE_USER.include,
+      where: { username },
+    },
+    order: [['createdAt', 'DESC']],
+  });
 }
 
 export async function getById(id) {
-  const found = tweets.find(tweet => tweet.id === id);
+  const found = await Tweet.findOne({
+    where: { id },
+    ...INCLUDE_USER,
+  });
   if (!found) {
     return null;
   }
-  const { username, name, url } = await authRepository.findById(found.userId);
-  return { ...found, username, name, url };
+  return found;
 }
 
 export async function created(text, userId) {
-  const { username, name, url } = await authRepository.findById(userId);
-  const tweet = {
-    id: Date.now().toString(),
-    text,
-    userId,
-    createdAt: new Date(),
-  };
-  tweets = [tweet, ...tweets];
-  return { ...tweet, username, name, url };
+  const created = await Tweet.create({ text, userId });
+  const found = await getById(created.dataValues.id);
+  return found;
 }
 
-export async function updated(id, text, userId) {
-  const { username, name, url } = await authRepository.findById(userId);
+export async function updated(id, text) {
   const tweet = await getById(id);
   if (tweet) {
-    tweet.text = text;
+    await tweet.update({ text });
   }
-  return { ...tweet, username, name, url };
+  return tweet;
 }
 
 export async function remove(id) {
-  tweets = tweets.filter(tweet => tweet.id !== id);
+  Tweet.destroy({ where: { id } });
 }

@@ -1,35 +1,50 @@
-let users = [
+import SQ from 'sequelize';
+import { sequelize } from '../db/database.js';
+
+const DataTypes = SQ.DataTypes;
+
+export const User = sequelize.define(
+  'user',
   {
-    id: '1',
-    username: 'seo',
-    password: `$2b$12$LPVQxDVfRJ8mlzZBz17z9uHWgQUMIQhlWUMRSTuE6wQ7y9ysL4l7q`,
-    name: 'seo',
-    email: 'seo@email.com',
-    url: 'https://widgetwhats.com/app/uploads/2019/11/free-profile-photo-whatsapp-1.png',
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      allowNull: false,
+      primaryKey: true,
+      unique: true,
+    },
+    username: {
+      type: DataTypes.STRING(45),
+      allowNull: false,
+    },
+    password: {
+      type: DataTypes.STRING(128),
+      allowNull: false,
+    },
+    name: {
+      type: DataTypes.STRING(128),
+      allowNull: false,
+    },
+    email: {
+      type: DataTypes.STRING(128),
+      allowNull: false,
+    },
+    url: DataTypes.TEXT,
   },
   {
-    id: '2',
-    username: 'sco',
-    password: `$2b$12$LPVQxDVfRJ8mlzZBz17z9uHWgQUMIQhlWUMRSTuE6wQ7y9ysL4l7q`,
-    name: 'sco',
-    email: 'sco@email.com',
-    url: 'https://widgetwhats.com/app/uploads/2019/11/free-profile-photo-whatsapp-1.png',
-  },
-];
+    timestamps: false,
+  }
+);
 
 export async function findById(id) {
-  return users.find(user => user.id === id);
+  return User.findOne({ where: { id } });
 }
 
 export async function findByUsername(username) {
-  return users.find(user => user.username === username);
+  return User.findOne({ where: { username } });
 }
 
 export async function createUser(user) {
-  const cerated = {
-    id: Date.now().toString(),
-    ...user,
-  };
-  users.push(cerated);
-  return cerated.id;
+  const created = await User.create(user);
+  return created.dataValues.id;
 }

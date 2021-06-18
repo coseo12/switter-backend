@@ -7,7 +7,8 @@ import { config } from '../config.js';
 
 function createJwtToken(id) {
   return jwt.sign({ id }, config.jwt.secretKey, {
-    expiresIn: config.jwt.expiresInSec,
+    // expiresIn: config.jwt.expiresInSec,
+    expiresIn: '30d',
   });
 }
 
