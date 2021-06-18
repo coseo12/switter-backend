@@ -11,7 +11,7 @@ function required(key, defaultValue = undefined) {
 
 export const config = {
   host: {
-    PORT: Number(required('PORT', 4000)),
+    PORT: Number(required('PORT', 8080)),
   },
   jwt: {
     secretKey: required('JWT_SECRET_KEY'),
