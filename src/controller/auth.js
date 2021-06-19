@@ -12,6 +12,10 @@ function createJwtToken(id) {
   });
 }
 
+function generateCRSFToken() {
+  return bcrypt.hash(config.csrf.plainToken, 1);
+}
+
 function setToken(res, token) {
   const options = {
     maxAge: config.jwt.expiresInSec * 1000,
@@ -67,4 +71,9 @@ export async function me(req, res, next) {
     return res.status(404).json({ message: `User not found` });
   }
   res.status(200).json({ token: req.token, username: user.username });
+}
+
+export async function csrfToken(req, res, next) {
+  const csrfToken = await generateCRSFToken();
+  res.status(200).json({ csrfToken });
 }

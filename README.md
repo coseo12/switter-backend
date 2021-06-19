@@ -170,6 +170,10 @@ User's profile photos
 }
 ```
 
+### `POST` /auth/logout
+
+📬 Response `200`
+
 ### `GET` /auth/me
 
 📬 Response `200`
@@ -178,5 +182,15 @@ User's profile photos
 {
   token,
 	username,
+}
+```
+
+### `GET` /auth/csrf-token
+
+📬 Response `200`
+
+```js
+{
+  csrfToken,
 }
 ```
