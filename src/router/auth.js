@@ -36,6 +36,9 @@ router.post('/signup', validateSignup, authController.signup);
 // POST /auth/login
 router.post('/login', validateCredential, authController.login);
 
+// GET /auth/logout
+router.get('/logout', authController.logout);
+
 router.get('/me', isAuth, authController.me);
 
 export default router;

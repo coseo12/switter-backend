@@ -5,12 +5,19 @@ import * as authRepository from '../data/auth.js';
 const AUTH_ERROR = { message: `Authorization Error` };
 
 export const isAuth = async (req, res, next) => {
+  let token;
   const authHeader = req.get('Authorization');
-  if (!(authHeader && authHeader.startsWith('Bearer '))) {
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    token = authHeader.split(` `)[1];
+  }
+  if (!token) {
+    token = req.cookies['token'];
+  }
+
+  if (!token) {
     return res.status(401).json(AUTH_ERROR);
   }
 
-  const token = authHeader.split(` `)[1];
   jwt.verify(token, config.jwt.secretKey, async (error, decoded) => {
     if (error) {
       return res.status(401).json(AUTH_ERROR);
