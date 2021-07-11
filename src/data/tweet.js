@@ -41,6 +41,7 @@ export async function getAll() {
   return Tweet.findAll({
     ...INCLUDE_USER,
     order: [['createdAt', 'DESC']],
+    raw: true,
   });
 }
 
@@ -52,6 +53,7 @@ export async function getByUsername(username) {
       where: { username },
     },
     order: [['createdAt', 'DESC']],
+    raw: true,
   });
 }
 

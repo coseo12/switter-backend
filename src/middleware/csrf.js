@@ -5,7 +5,9 @@ export const csrfCheck = (req, res, next) => {
   if (
     req.method === 'GET' ||
     req.method === 'OPTIONS' ||
-    req.method === 'HEAD'
+    req.method === 'HEAD' ||
+    req.originalUrl === '/auth/signup' ||
+    req.originalUrl === '/auth/login'
   ) {
     return next();
   }
